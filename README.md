@@ -61,11 +61,11 @@ include jmxtrans
 $jmx_kafka_queries = [ 
 	{
 		"obj"    => "kafka:type=kafka.BrokerAllTopicStat",
-		"attr"   => [ "BytesIn", "BytesOut", "FailedFetchRequest", "FailedProduceRequest", "MessagesIn" ],
+		"attr"   => [ "BytesIn", "BytesOut", "FailedFetchRequest", "FailedProduceRequest", "MessagesIn" ]
 	},
 	{
 		"obj"    => "kafka:type=kafka.LogFlushStats",
-		"attr"   => [ "AvgFlushMs", "FlushesPerSecond", "MaxFlushMs", "NumFlushes", "TotalFlushMs" ],
+		"attr"   => [ "AvgFlushMs", "FlushesPerSecond", "MaxFlushMs", "NumFlushes", "TotalFlushMs" ]
 	},
 	{
 		"obj"    => "kafka:type=kafka.SocketServerStats",
@@ -84,9 +84,9 @@ $jmx_kafka_queries = [
 		    "TotalBytesWritten",
 		    "TotalFetchRequestMs",
 		    "TotalProduceRequestMs"
-		],
-	},
-],
+		]
+	}
+]
 
 # query kafka1 for its JMX metrics
 jmxtrans::metrics { "kafka1":
