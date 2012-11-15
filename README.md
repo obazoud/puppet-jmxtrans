@@ -14,27 +14,29 @@ if you are not familiar with jmxtrans queries.
 ```jmxtrans::metrics``` abstracts much of the repetitive JSON structures
 needed to build jmxtrans queries.  It currently supports KeyOutWriter,
 GangliaWriter and GraphiteWriter.  You specify the JMX connection info
-and the queries, and configuration informationabout each output writer
+and the queries, and configuration information about each output writer
 you would like to use.  You should use a single ```jmxtrans::metrics```
-define for JVM you would like query.  This will keep JMX queries to a single
-JVM bundled together.  See jmxtrans [best practices](https://github.com/lookfirst/jmxtrans/wiki/BestPractices)
+define for each JVM you would like query.  This will keep JMX queries
+to a single JVM bundled together.  See jmxtrans
+[best practices](https://github.com/lookfirst/jmxtrans/wiki/BestPractices)
 for more information.
 
 # Usage 
+## Hadoop NameNode with multiple jmxtrans outputs
+
+Query a Hadoop NameNode for some stats, and write the metrics to
+/tmp/namenode.jmx.out, Ganglia, and Graphite.
 
 ```puppet
-# Query a Hadoop NameNode for some stats, and write the metrics to
-# /tmp/namenode.jmx.out, Ganglia, and Graphite.
-
 include jmxtrans
 
 jmxtrans::metrics { "hadoop-hdfs-namenode":
-	jmx       => "127.0.0.1:9980",
-	outfile   => "/tmp/namenode.jmx.out",
-    ganglia   => "127.0.0.1:8649",
-    ganglia_group_name => "hadoop",
-	graphite  => "127.0.0.1:2003",
-	graphite_root_prefix => "hadoop",
+	jmx                   => "127.0.0.1:9980",
+	outfile               => "/tmp/namenode.jmx.out",
+    ganglia               => "127.0.0.1:8649",
+    ganglia_group_name    => "hadoop",
+	graphite              => "127.0.0.1:2003",
+	graphite_root_prefix  => "hadoop",
 	queries => [ 
 		{
 			"obj"    => "Hadoop:service=NameNode,name=NameNodeActivity",
@@ -48,9 +50,9 @@ jmxtrans::metrics { "hadoop-hdfs-namenode":
 }
 ```
 
-```puppet
-# Query multiple Kafka hosts and output to Ganglia.
+## Kafka Broker with jmxtrans Ganglia output.
 
+```puppet
 include jmxtrans
 
 # Since we have multiple hosts sharing the same queries,
