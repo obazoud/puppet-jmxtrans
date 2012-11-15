@@ -1,0 +1,76 @@
+<%
+
+(jmx_host, jmx_port) = jmx.split(':')
+
+# Build output writer json strings
+# from the outfile, ganglia, and/or
+# graphite variables.
+
+output_writers = []
+
+if @outfile
+  output_writers.push("{
+        \"@class\" : \"com.googlecode.jmxtrans.model.output.KeyOutWriter\",
+        \"settings\" : {
+          \"outputFile\" : \"#{outfile}\"
+        }
+      }")
+end
+
+if @ganglia
+  (ganglia_host, ganglia_port) = ganglia.split(':') if @ganglia
+
+  ganglia_output_writer = "{
+        \"@class\" : \"com.googlecode.jmxtrans.model.output.GangliaWriter\",
+        \"settings\"  : {
+          \"host\"      : \"#{ganglia_host}\",
+          \"port\"      : #{ganglia_port}"
+  ganglia_output_writer += ",\n          \"groupName\" : \"#{ganglia_group_name}\"" if @ganglia_group_name
+  ganglia_output_writer += "\n        }\n      }"
+  output_writers.push(ganglia_output_writer)
+end
+
+if @graphite
+  (graphite_host, graphite_port) = graphite.split(':')
+  graphite_output_writer = "{
+        \"@class\" : \"com.googlecode.jmxtrans.model.output.GraphiteWriter\",
+        \"settings\"   : {
+          \"host\"       : \"#{graphite_host}\",
+          \"port\"       : #{graphite_port}"
+  graphite_output_writer += ",\n          \"rootPrefix\" : \"#{graphite_root_prefix}\"" if @graphite_root_prefix
+  graphite_output_writer += "\n        }\n      }"
+  output_writers.push(graphite_output_writer)
+end
+
+# Output the JSON string.
+-%>
+
+{ "servers" : [ {
+
+  "host" : "<%= jmx_host %>", 
+  "port" : <%= jmx_port %>,
+<% if @jmx_username -%>
+  "username" : "<%= jmx_username %>"
+<% end -%>
+<% if @jmx_password -%>
+  "password" : "<%= jmx_password %>"
+<% end -%>
+  "queries" :
+  [
+<% # loop over each query and output it with each configured output_writer -%>
+<% queries.each_with_index do |query, index| -%> 
+<% unless index == 0 -%>
+    ,
+<% end -%>
+    {
+      "obj"  : "<%= query["obj"] %>",
+      "attr" : [ <%= query['attr'].map {|t| "\""+t.to_s+"\""}.join(', ') %> ],
+<% puts "      \"resultAlias\" : #{query["resultAlias"]}" if query.has_key? "resultAlias" -%>
+      "outputWriters" : [
+      <%= output_writers.join(",\n      ") %>
+      ]
+    }
+<% end # queries.each_with_index -%>
+  ]
+
+} ] }
