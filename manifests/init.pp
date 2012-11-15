@@ -21,7 +21,7 @@ define jmxtrans::metrics(
 	$outfile              = undef
 	)
 {
-	require jmxtrans::install
+	require jmxtrans
 
 	file { "/var/lib/jmxtrans/${title}.json":
 		content => template("jmxtrans/jmxtrans.json.erb"),
