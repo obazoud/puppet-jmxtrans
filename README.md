@@ -50,7 +50,7 @@ jmxtrans::metrics { "hadoop-hdfs-namenode":
 }
 ```
 
-## Kafka Broker with jmxtrans Ganglia output.
+## Kafka Broker with jmxtrans Ganglia output
 
 ```puppet
 include jmxtrans
