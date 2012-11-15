@@ -18,12 +18,12 @@ class jmxtrans {
 # $queries              - array of hashes of the form [ { "obj" => "JMX object name", "attr" => [ "array", "of", "JMX", "metric", "names" ] }, ... ]
 # $jmx_username         - JMX username (if there is one)
 # $jmx_password         - JMX password (if there is one)
-# $resultAlias
+# $resultAlias          - resultAlias for the query results
 # $ganglia              - host:port of Ganglia gmond
-# $ganglia_group_name   = Ganglia metrics group
-# $graphite             = host:port of Graphite server
-# $graphite_root_prefix = 
-# $outfile              = local file path in which to save metric query results.
+# $ganglia_group_name   - Ganglia metrics group
+# $graphite             - host:port of Graphite server
+# $graphite_root_prefix - rootPrefix for Graphite
+# $outfile              - local file path in which to save metric query results
 define jmxtrans::metrics(
 	$jmx,
 	$queries,
